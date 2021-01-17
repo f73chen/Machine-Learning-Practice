@@ -14,6 +14,7 @@ from PIL import Image
 import tensorflow as tf
 #import keras.backend.tensorflow_backend as backend
 import numpy as np
+import keras
 import time
 import random
 import os
@@ -145,7 +146,7 @@ class DQNAgent:
 
         # Note: ACTION_SPACE_SIZE = number of choices = 9
         model.add(Dense(env.ACTION_SPACE_SIZE, activation = 'linear'))
-        model.compile(loss = "mse", optimizer = Adam(lr = 0.001), metrics = ['accuracy'])
+        model.compile(loss = "mse", optimizer = Adam(lr = 0.001), metrics = ['accuracy'], run_eagerly=True)
         return model
 
     # add data from the current step to the end of memory replay
@@ -256,6 +257,8 @@ for episode in tqdm(range(1, EPISODES + 1), ascii = True, unit = 'episodes'):
 
     # reset environment and get initial state
     current_state = env.reset()
+    tf.compat.v1.enable_eager_execution()
+    print("@@@@@@@@@@@" + str(tf.executing_eagerly()) + "@@@@@@@@@@@@@@@@@@@@")
 
     # after restarting episode and state, iterate over steps in the episode:
     done = False
