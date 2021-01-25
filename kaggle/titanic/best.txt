@@ -27,3 +27,96 @@ colsample_bytree: 0.8
 booster: gbtree
 
 
+best random forest: 
+random_state: 1
+oob_score: True
+n_estimators: 670
+min_samples_split: 6
+min_samples_leaf: 4
+max_features: auto
+max_depth: 7
+bootstrap: True
+
+best extra trees: 
+random_state: 1
+oob_score: True
+n_estimators: 166
+min_samples_split: 6
+min_samples_leaf: 4
+max_features: auto
+max_depth: 4
+bootstrap: True
+
+best xgboost: 
+subsample: 0.7
+seed: 2
+objective: binary:logistic
+max_depth: 6
+eval_metric: logloss
+eta: 0.09
+colsample_bytree: 0.8
+booster: gbtree
+
+
+best random forest: 
+random_state: 3
+oob_score: True
+n_estimators: 847
+min_samples_split: 5
+min_samples_leaf: 3
+max_features: auto
+max_depth: 6
+bootstrap: True
+
+best extra trees: 
+random_state: 2
+oob_score: True
+n_estimators: 1334
+min_samples_split: 6
+min_samples_leaf: 3
+max_features: auto
+max_depth: 4
+bootstrap: True
+
+best xgboost: 
+subsample: 0.4
+seed: 3
+objective: binary:logistic
+max_depth: 8
+eval_metric: logloss
+eta: 0.05
+colsample_bytree: 0.9
+booster: gblinear
+
+
+best random forest: 
+random_state: 2
+oob_score: True
+n_estimators: 1868
+min_samples_split: 6
+min_samples_leaf: 3
+max_features: auto
+max_depth: 6
+bootstrap: True
+
+best extra trees: 
+random_state: 2
+oob_score: True
+n_estimators: 475
+min_samples_split: 5
+min_samples_leaf: 3
+max_features: auto
+max_depth: 6
+bootstrap: True
+
+best xgboost: 
+subsample: 0.8
+seed: 4
+objective: binary:logistic
+max_depth: 9
+eval_metric: logloss
+eta: 0.05
+colsample_bytree: 0.8
+booster: gbtree
+
+
