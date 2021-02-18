@@ -61,19 +61,23 @@ class Cluster:
       return np.arccos(np.dot(unit_vect_1, unit_vect_2)) / (2 * math.pi) * 360
 
 ''' ######################### '''
+
 # Generate & plot case 1 data
 CLUSTER_A = Cluster(name='A', N=200, 
-                    mean=(2, 1), 
-                    covariance=[[6, -2], [-2, 9]],
+                    mean =      (-0, 0), 
+                    covariance=[[1, 0], 
+                                [0, 1]],
                     color='r')
 CLUSTER_B = Cluster(name='B', N=200, 
-                    mean=(-9, 5), 
-                    covariance=[[9/2, 3/2], [3/2, 17/2]],
+                    mean =      (2, 2), 
+                    covariance=[[2, 1], 
+                                [1, 2]],
                     color='b')
-''' ######################### '''
 
 def equation(x, y):
     return (101*x**2 + 9840*x - 294*x*y + 9*y**2 + 45000 - 2880*y)/1800
+
+''' ######################### '''
 
 def get_meshgrid(clusters, spacing = 0.5):
   x1_min = x1_max = clusters[0].data[0][0]
