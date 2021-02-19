@@ -206,7 +206,7 @@ seqValidX = token.texts_to_sequences(validX)
 # Zero pad the sequences
 padTrainX = sequence.pad_sequences(seqTrainX, maxlen = maxLen)
 padValidX = sequence.pad_sequences(seqValidX, maxlen = maxLen)
-wordIndex = token.wordIndex
+wordIndex = token.word_index
 
 # Create embedding matrix for words in dataset
 embeddingMatrix = np.zeros((len(wordIndex) + 1, 300))
@@ -220,7 +220,12 @@ model = Sequential()
 model.add(Embedding(len(wordIndex) + 1, 300, weights = [embeddingMatrix],
                     input_length=maxLen, trainable = False))
 nodel.add(SpatialDropout1D(0.3))
-model.add(LSTM(300, dropout = 0.3, recurrent_dropout=0.3))
+#model.add(Bidirectional(LSTM(300, dropout = 0.3, recurrent_dropout=0.3)))
+
+#''' Instead of Bidirectional LSTM, use two GRU nets
+model.add(GRU(300, dropout = 0.3, recurrent_dropout = 0.3, return_sequences=True))
+model.add(GRU(300, dropout = 0.3, recurrent_dropout = 0.3))
+#'''
 
 model.add(Dense(1024, activation = 'relu'))
 model.add(Dropout(0.8))
