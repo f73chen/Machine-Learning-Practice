@@ -219,7 +219,7 @@ for word, i in tqdm(wordIndex.items()):
 model = Sequential()
 model.add(Embedding(len(wordIndex) + 1, 300, weights = [embeddingMatrix],
                     input_length=maxLen, trainable = False))
-nodel.add(SpatialDropout1D(0.3))
+model.add(SpatialDropout1D(0.3))
 #model.add(Bidirectional(LSTM(300, dropout = 0.3, recurrent_dropout=0.3)))
 
 #''' Instead of Bidirectional LSTM, use two GRU nets
