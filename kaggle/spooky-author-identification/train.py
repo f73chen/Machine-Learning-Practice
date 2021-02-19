@@ -52,7 +52,6 @@ y = labelEnc.fit_transform(train.author.values)
 trainX, validX, trainY, validY = train_test_split(train.text.values, y,
     stratify = y, random_state = 42, test_size = 0.1, shuffle = True)
 
-'''
 # Note: always start with these features b/c they work well
 tfv = TfidfVectorizer(min_df = 3, max_features = None,
     strip_accents = 'unicode', analyzer = 'word', token_pattern = r'\w{1,}',
@@ -65,6 +64,7 @@ tfv.fit(list(trainX) + list(validX))
 tfvTrainX = tfv.transform(trainX)
 tfvValidX = tfv.transform(validX)
 
+'''
 # Fit simple Logistic Regression on TFIDF
 # Lower log loss is better
 clf = LogisticRegression(C = 1.0, solver = 'lbfgs', max_iter = 200)
@@ -73,7 +73,6 @@ pred = clf.predict_proba(tfvValidX)
 print("logloss: %0.3f " % multiclass_logloss(validY, pred))
 '''
 
-'''
 # Instead of using TF-IDF vectorizer, use count vectorizer
 ctv = CountVectorizer(analyzer = 'word', token_pattern = r'\w{1,}',
     ngram_range = (1, 3), stop_words = 'english')
@@ -83,9 +82,37 @@ ctv.fit(list(trainX) + list(validX))
 ctvTrainX = ctv.transform(trainX)
 ctvValidX = ctv.transform(validX)
 
+'''
 # Fit simple Logistic Regression on Counts
 clf = LogisticRegression(C = 1.0, max_iter = 200)
 clf.fit(ctvTrainX, trainY)
 pred = clf.predict_proba(ctvValidX)
 print("logloss: %0.3f " % multiclass_logloss(validY, pred))
 '''
+
+'''
+# Fit simple Naive Bayes on Counts
+clf = MultinomialNB()
+clf.fit(ctvTrainX, trainY)
+pred = clf.predict_proba(ctvValidX)
+print("logloss: %0.3f " % multiclass_logloss(validY, pred))
+'''
+
+# SVMs take a lot of time, so reduce the number of features using Singular Value Decomposition
+# Must standardize the data
+svd = decomposition.TruncatedSVD(n_components = 120)
+svd.fit(tfvTrainX)
+svdTrainX = svd.transform(tfvTrainX)
+svdValidX = svd.transform(tfvValidX)
+
+# Scale the data
+scl = preprocessing.StandardScaler()
+scl.fit(svdTrainX)
+sclSvdTrainX = scl.transform(svdTrainX)
+sclSvdValidX = scl.transform(svdValidX)
+
+# Fit simple SVM
+clf = SVC(C = 1.0, probability = True)
+clf.fit(sclSvdTrainX, trainY)
+pred = clf.predict_proba(sclSvdValidX)
+print("logloss: %0.3f " % multiclass_logloss(validY, pred))
