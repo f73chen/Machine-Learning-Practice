@@ -40,14 +40,14 @@ def multiclass_logloss(actual, pred, eps = 1e-15):
             actual2[i, val] = 1
         actual = actual2
 
-    clip = np.clip(predicted, eps, 1-eps)   # Cut off decimal places
+    clip = np.clip(pred, eps, 1-eps)   # Cut off decimal places
     rows = actual.shape[0]                  # Number of examples
     vsota = np.sum(actual * np.log(clip))
     return -1.0 / rows * vsota
 
-# convert text labels to integers 0, 1, 2
-label_enc = preprocessing.LabelEncoder()
-y = label_enc.fit_transform(train.author.values)
+# Convert text labels to integers 0, 1, 2
+labelEnc = preprocessing.LabelEncoder()
+y = labelEnc.fit_transform(train.author.values)
 
 trainX, validX, trainY, validY = train_test_split(train.text.values, y,
     stratify = y, random_state = 42, test_size = 0.1, shuffle = True)
@@ -58,3 +58,15 @@ tfv = TfidfVectorizer(min_df = 3, max_features = None,
     ngram_range = (1, 3), use_idf = 1, smooth_idf = 1, 
     sublinear_tf = 1, stop_words = 'english')
 
+# Fit TF-IDF to both training and test sets
+# Aka semi-supervised learning
+tfv.fit(list(trainX) + list(validX))
+tfvTrainX = tfv.transform(trainX)
+tfvValidX = tfv.transform(validX)
+
+# Fit simple Logistic Regression on TFIDF
+# Lower log loss is better
+clf = LogisticRegression(C = 1.0, solver = 'lbfgs', max_iter = 200)
+clf.fit(tfvTrainX, trainY)
+pred = clf.predict_proba(tfvValidX)
+print("logloss: %0.3f " % multiclass_logloss(validY, pred))
