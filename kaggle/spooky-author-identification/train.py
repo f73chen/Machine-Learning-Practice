@@ -52,6 +52,7 @@ y = labelEnc.fit_transform(train.author.values)
 trainX, validX, trainY, validY = train_test_split(train.text.values, y,
     stratify = y, random_state = 42, test_size = 0.1, shuffle = True)
 
+'''
 # Note: always start with these features b/c they work well
 tfv = TfidfVectorizer(min_df = 3, max_features = None,
     strip_accents = 'unicode', analyzer = 'word', token_pattern = r'\w{1,}',
@@ -70,3 +71,21 @@ clf = LogisticRegression(C = 1.0, solver = 'lbfgs', max_iter = 200)
 clf.fit(tfvTrainX, trainY)
 pred = clf.predict_proba(tfvValidX)
 print("logloss: %0.3f " % multiclass_logloss(validY, pred))
+'''
+
+'''
+# Instead of using TF-IDF vectorizer, use count vectorizer
+ctv = CountVectorizer(analyzer = 'word', token_pattern = r'\w{1,}',
+    ngram_range = (1, 3), stop_words = 'english')
+
+# Fit Count Vectorizer to both training and test sets
+ctv.fit(list(trainX) + list(validX))
+ctvTrainX = ctv.transform(trainX)
+ctvValidX = ctv.transform(validX)
+
+# Fit simple Logistic Regression on Counts
+clf = LogisticRegression(C = 1.0, max_iter = 200)
+clf.fit(ctvTrainX, trainY)
+pred = clf.predict_proba(ctvValidX)
+print("logloss: %0.3f " % multiclass_logloss(validY, pred))
+'''
