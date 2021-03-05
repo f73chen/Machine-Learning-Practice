@@ -64,14 +64,14 @@ class Cluster:
 
 # Generate & plot case 1 data
 CLUSTER_A = Cluster(name='A', N=200, 
-                    mean =      (-0, 0), 
-                    covariance=[[1, 0], 
-                                [0, 1]],
+                    mean =      (3, 3), 
+                    covariance=[[20, 5], 
+                                [5, 10]],
                     color='r')
 CLUSTER_B = Cluster(name='B', N=200, 
-                    mean =      (2, 2), 
-                    covariance=[[2, 1], 
-                                [1, 2]],
+                    mean =      (9, 9), 
+                    covariance=[[20, -5], 
+                                [-5, 10]],
                     color='b')
 
 def equation(x, y):
